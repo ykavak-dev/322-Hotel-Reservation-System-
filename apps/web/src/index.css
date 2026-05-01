@@ -1,8 +1,22 @@
 @import "sonner/dist/styles.css";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --navy: #1E3A5F;
+  --royal-blue: #3B82F6;
+  --sky-blue: #0EA5E9;
+  --success: #22C55E;
+  --error: #EF4444;
+  --warning: #F59E0B;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+}
 
 @layer base {
   :root {
