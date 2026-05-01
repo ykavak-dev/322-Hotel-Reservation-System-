@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Star, MapPin, Wifi, Car, Dumbbell, Utensils, Clock, ChevronLeft, ChevronRight, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 
@@ -38,8 +39,8 @@ export function HotelDetailPage() {
         <div className="max-w-7xl mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold text-[#1E3A5F]">HotelHub</h1>
           <nav className="flex gap-6">
-            <a href="/hotels" className="text-gray-600 hover:text-[#3B82F6]">Hotels</a>
-            <a href="/my-bookings" className="text-gray-600 hover:text-[#3B82F6]">My Bookings</a>
+            <Link to="/hotels" className="text-gray-600 hover:text-[#3B82F6]">Hotels</Link>
+            <Link to="/my-bookings" className="text-gray-600 hover:text-[#3B82F6]">My Bookings</Link>
           </nav>
         </div>
       </header>
