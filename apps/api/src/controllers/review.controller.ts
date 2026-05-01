@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { createReview, getHotelReviews, getUserReviews, approveReview, rejectReview, deleteReview } from '../services/review.service';
+import { createReview, getHotelReviews, getUserReviews, approveReview, rejectReview, deleteReview, canUserReviewHotel } from '../services/review.service';
 import { sendSuccess } from '../utils/response';
 
 export async function createReviewHandler(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -63,6 +63,30 @@ export async function deleteReviewHandler(req: Request, res: Response, next: Nex
     const { id } = req.params;
     await deleteReview(id, req.user!.id);
     sendSuccess(res, { message: 'Review deleted' });
+  } catch (err) {
+    next(err);
+  }
+}
+
+export async function canReviewHandler(req: Request, res: Response, next: NextFunction): Promise<void> {
+  try {
+    const { hotelId } = req.query;
+
+    if (!hotelId || typeof hotelId !== 'string') {
+      res.status(400).json({
+        success: false,
+        error: { message: 'hotelId query param is required', code: 'VALIDATION_ERROR' },
+      });
+      return;
+    }
+
+    if (!req.user) {
+      sendSuccess(res, { canReview: false, reason: 'Authentication required' });
+      return;
+    }
+
+    const result = await canUserReviewHotel(req.user.id, hotelId);
+    sendSuccess(res, result);
   } catch (err) {
     next(err);
   }

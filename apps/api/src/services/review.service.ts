@@ -188,3 +188,38 @@ export async function deleteReview(reviewId: string, adminId: string): Promise<v
     hotelId: review.hotelId,
   });
 }
+
+export async function canUserReviewHotel(
+  userId: string,
+  hotelId: string
+): Promise<{ canReview: boolean; reason?: string }> {
+  // Check if user has any COMPLETED booking at this hotel
+  const completedBooking = await prisma.booking.findFirst({
+    where: {
+      userId,
+      status: 'COMPLETED',
+      room: { hotelId },
+    },
+  });
+
+  if (!completedBooking) {
+    return {
+      canReview: false,
+      reason: 'No completed stay at this hotel',
+    };
+  }
+
+  // Check if already reviewed
+  const existingReview = await prisma.review.findUnique({
+    where: { bookingId: completedBooking.id },
+  });
+
+  if (existingReview) {
+    return {
+      canReview: false,
+      reason: 'You have already reviewed this hotel',
+    };
+  }
+
+  return { canReview: true };
+}
