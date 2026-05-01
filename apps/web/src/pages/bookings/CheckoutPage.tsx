@@ -4,8 +4,9 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useMutation } from '@tanstack/react-query';
 import { toast } from 'sonner';
+import { FormProvider } from 'react-hook-form';
 
-import { checkoutSchema, type CheckoutFormData } from '@/lib/validations/bookingSchemas';
+import { checkoutSchema } from '@/lib/validations/bookingSchemas';
 import { createBooking } from '@/services/api';
 import { queryClient } from '@/lib/api/queryClient';
 import type { CreateBookingData } from '@/types/booking';
@@ -39,7 +40,7 @@ export const CheckoutPage: React.FC = () => {
   }, [checkIn, checkOut]);
 
   // Form setup
-  const form = useForm<CheckoutFormData>({
+  const methods = useForm({
     resolver: zodResolver(checkoutSchema),
     defaultValues: {
       firstName: '',
@@ -54,6 +55,8 @@ export const CheckoutPage: React.FC = () => {
       guestPhone: '',
     },
   });
+
+  const { handleSubmit } = methods;
 
   // Create booking mutation
   const mutation = useMutation({
@@ -70,7 +73,7 @@ export const CheckoutPage: React.FC = () => {
     },
   });
 
-  const handleSubmit = (data: CheckoutFormData) => {
+  const onSubmit = handleSubmit((data) => {
     if (!roomId || !checkIn || !checkOut) {
       toast.error('Missing booking information. Please go back and try again.');
       return;
@@ -83,7 +86,7 @@ export const CheckoutPage: React.FC = () => {
       numberOfGuests: guests,
       specialRequests: data.specialRequests,
     });
-  };
+  });
 
   // Validate required params on mount
   useEffect(() => {
@@ -94,67 +97,65 @@ export const CheckoutPage: React.FC = () => {
   }, [roomId, checkIn, checkOut, navigate]);
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto px-4 py-6">
-        {/* Breadcrumb */}
-        <div className="mb-6">
-          <Breadcrumb
-            items={[
-              { label: hotelName, href: `/hotels` },
-              { label: roomType },
-              { label: 'Booking' },
-            ]}
-          />
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-          {/* Left column - 60% */}
-          <div className="space-y-6">
-            <BookingSummaryCard
-              hotelImage={hotelImage}
-              hotelName={hotelName}
-              roomType={roomType}
-              checkIn={checkIn}
-              checkOut={checkOut}
-              nights={nights}
-              pricePerNight={price}
-            />
-
-            <GuestDetailsForm
-              form={form}
-              onSubmit={handleSubmit}
-              isSubmitting={mutation.isPending}
+    <FormProvider {...methods}>
+      <div className="min-h-screen bg-background">
+        <div className="container mx-auto px-4 py-6">
+          {/* Breadcrumb */}
+          <div className="mb-6">
+            <Breadcrumb
+              items={[
+                { label: hotelName, href: `/hotels` },
+                { label: roomType },
+                { label: 'Booking' },
+              ]}
             />
           </div>
 
-          {/* Right column - 40%, sticky */}
-          <div className="hidden lg:block">
-            <div className="sticky top-24">
+          <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
+            {/* Left column - 60% */}
+            <div className="space-y-6">
+              <BookingSummaryCard
+                hotelImage={hotelImage}
+                hotelName={hotelName}
+                roomType={roomType}
+                checkIn={checkIn}
+                checkOut={checkOut}
+                nights={nights}
+                pricePerNight={price}
+              />
+
+              <GuestDetailsForm />
+            </div>
+
+            {/* Right column - 40%, sticky */}
+            <div className="hidden lg:block">
+              <div className="sticky top-24">
+                <PriceSummaryCard
+                  pricePerNight={price}
+                  nights={nights}
+                  isSubmitting={mutation.isPending}
+                  onConfirm={onSubmit}
+                />
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile price summary - bottom sticky */}
+          <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4 lg:hidden">
+            <div className="mx-auto max-w-md">
               <PriceSummaryCard
                 pricePerNight={price}
                 nights={nights}
                 isSubmitting={mutation.isPending}
-                onConfirm={form.handleSubmit(handleSubmit)}
+                onConfirm={onSubmit}
               />
             </div>
           </div>
-        </div>
 
-        {/* Mobile price summary - bottom sticky */}
-        <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4 lg:hidden">
-          <div className="mx-auto max-w-md">
-            <PriceSummaryCard
-              pricePerNight={price}
-              nights={nights}
-              isSubmitting={mutation.isPending}
-              onConfirm={form.handleSubmit(handleSubmit)}
-            />
-          </div>
+          {/* Spacer for mobile bottom bar */}
+          <div className="h-24 lg:hidden" />
         </div>
-
-        {/* Spacer for mobile bottom bar */}
-        <div className="h-24 lg:hidden" />
       </div>
-    </div>
+    </FormProvider>
   );
 };
