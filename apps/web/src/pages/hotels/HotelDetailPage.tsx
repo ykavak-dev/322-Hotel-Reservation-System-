@@ -215,6 +215,7 @@ export function HotelDetailPage() {
           <h2 className="mb-4 text-xl font-semibold">Select a Room</h2>
           <RoomTable
             hotelId={hotel.id}
+            hotelName={hotel.name}
             initialCheckIn={checkIn}
             initialCheckOut={checkOut}
             initialGuests={guests}

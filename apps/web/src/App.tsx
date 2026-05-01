@@ -11,6 +11,9 @@ import { ProfilePage } from './pages/user/ProfilePage';
 import { SearchPage } from './pages/hotels/SearchPage';
 import { HotelDetailPage } from './pages/hotels/HotelDetailPage';
 import { ConfirmationPage } from './pages/bookings/ConfirmationPage';
+import { CheckoutPage } from './pages/bookings/CheckoutPage';
+import { PaymentPage } from './pages/bookings/PaymentPage';
+import { MyBookingsPage } from './pages/bookings/MyBookingsPage';
 import { UnauthorizedPage } from './pages/error/UnauthorizedPage';
 import Home from './pages/Home';
 
@@ -40,6 +43,9 @@ function App() {
         >
           <Route path="/profile" element={<ProfilePage />} />
           <Route path="/booking-confirmation/:id" element={<ConfirmationPage />} />
+          <Route path="/booking/:roomId" element={<CheckoutPage />} />
+          <Route path="/payment/:bookingId" element={<PaymentPage />} />
+          <Route path="/my-bookings" element={<MyBookingsPage />} />
         </Route>
 
         {/* Hotel Admin routes */}

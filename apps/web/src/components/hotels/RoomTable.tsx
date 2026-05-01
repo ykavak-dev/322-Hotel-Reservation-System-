@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { useQuery } from '@tanstack/react-query';
 import { Users, Bed, CheckCircle } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -9,12 +10,14 @@ import type { AvailabilityResponse } from '@/types/hotel';
 
 interface RoomTableProps {
   hotelId: string;
+  hotelName?: string;
   initialCheckIn?: string;
   initialCheckOut?: string;
   initialGuests?: number;
 }
 
-export function RoomTable({ hotelId, initialCheckIn, initialCheckOut, initialGuests = 1 }: RoomTableProps) {
+export function RoomTable({ hotelId, hotelName, initialCheckIn, initialCheckOut, initialGuests = 1 }: RoomTableProps) {
+  const navigate = useNavigate();
   const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({
     from: initialCheckIn ? new Date(initialCheckIn) : undefined,
     to: initialCheckOut ? new Date(initialCheckOut) : undefined,
@@ -121,7 +124,18 @@ export function RoomTable({ hotelId, initialCheckIn, initialCheckOut, initialGue
                 <Button
                   disabled={room.availableQuantity === 0}
                   onClick={() => {
-                    alert(`Room ${room.id} selected. Booking flow coming soon.`);
+                    if (!checkIn || !checkOut) return;
+                    const params = new URLSearchParams({
+                      checkIn,
+                      checkOut,
+                      guests: String(initialGuests),
+                      roomId: room.id,
+                      price: String(room.pricePerNight),
+                      hotelName: hotelName ?? '',
+                      roomType: room.type,
+                      hotelImage: room.images[0] ?? '',
+                    });
+                    navigate(`/booking/${room.id}?${params.toString()}`);
                   }}
                 >
                   Select
