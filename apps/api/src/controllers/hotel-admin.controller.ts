@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from 'express';
-import { getHotelAdminBookings, confirmBooking, checkInBooking, checkOutBooking } from '../services/booking.service';
+import { getHotelAdminBookings, confirmBooking, checkInBooking, checkOutBooking, BookingFilters } from '../services/booking.service';
 import { sendSuccess } from '../utils/response';
 import { ApiError } from '../utils/ApiError';
 
@@ -13,10 +13,16 @@ export async function getHotelAdminBookingsHandler(req: Request, res: Response, 
       throw new ApiError('Forbidden', 403, 'FORBIDDEN');
     }
 
-    const page = Math.max(1, Number(req.query.page ?? 1));
-    const limit = Math.min(100, Math.max(1, Number(req.query.limit ?? 10)));
-
-    const result = await getHotelAdminBookings(req.user.id, page, limit);
+    const filters: BookingFilters = {
+      status: req.query.status as string,
+      dateFrom: req.query.dateFrom as string,
+      dateTo: req.query.dateTo as string,
+      roomType: req.query.roomType as string,
+      guestName: req.query.guestName as string,
+      page: Math.max(1, Number(req.query.page ?? 1)),
+      limit: Math.min(100, Math.max(1, Number(req.query.limit ?? 10))),
+    };
+    const result = await getHotelAdminBookings(req.user.id, filters);
     sendSuccess(res, result);
   } catch (err) {
     next(err);

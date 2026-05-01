@@ -279,7 +279,21 @@ export async function cancelBooking(bookingId: string, userId: string): Promise<
   };
 }
 
-export async function getHotelAdminBookings(hotelAdminId: string, page: number, limit: number) {
+export interface BookingFilters {
+  status?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  roomType?: string;
+  guestName?: string;
+  page?: number;
+  limit?: number;
+}
+
+export async function getHotelAdminBookings(hotelAdminId: string, filters: BookingFilters) {
+  const { status, dateFrom, dateTo, roomType, guestName } = filters;
+  const page = Math.max(1, filters.page ?? 1);
+  const limit = Math.min(100, Math.max(1, filters.limit ?? 10));
+
   // Get hotels owned by this admin
   const ownedHotels = await prisma.hotelOwner.findMany({
     where: { userId: hotelAdminId },
@@ -292,21 +306,54 @@ export async function getHotelAdminBookings(hotelAdminId: string, page: number, 
     return { bookings: [], total: 0, page, totalPages: 0 };
   }
 
+  // Build where clause
+  const whereClause: Record<string, unknown> = {
+    room: { hotelId: { in: hotelIds } },
+  };
+
+  if (status) {
+    whereClause.status = status;
+  }
+
+  if (dateFrom || dateTo) {
+    whereClause.checkIn = {};
+    if (dateFrom) {
+      (whereClause.checkIn as Record<string, Date>).gte = new Date(dateFrom);
+    }
+    if (dateTo) {
+      (whereClause.checkIn as Record<string, Date>).lte = new Date(dateTo);
+    }
+  }
+
+  if (roomType) {
+    whereClause.room = { ...((whereClause.room as Record<string, unknown>) ?? {}), type: roomType };
+  }
+
+  if (guestName) {
+    whereClause.user = {
+      OR: [
+        { firstName: { contains: guestName, mode: 'insensitive' } },
+        { lastName: { contains: guestName, mode: 'insensitive' } },
+      ],
+    };
+  }
+
   const skip = (page - 1) * limit;
 
   const [bookings, total] = await Promise.all([
     prisma.booking.findMany({
-      where: { room: { hotelId: { in: hotelIds } } },
+      where: whereClause,
       include: {
         room: { include: { hotel: true } },
         payments: true,
+        user: { select: { firstName: true, lastName: true, email: true } },
       },
       orderBy: { createdAt: 'desc' },
       skip,
       take: limit,
     }),
     prisma.booking.count({
-      where: { room: { hotelId: { in: hotelIds } } },
+      where: whereClause,
     }),
   ]);
 
