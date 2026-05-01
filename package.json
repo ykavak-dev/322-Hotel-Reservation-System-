@@ -12,7 +12,10 @@
     "build:api": "yarn workspace @hotel/api build",
     "build:web": "yarn workspace @hotel/web build",
     "lint:api": "yarn workspace @hotel/api lint",
-    "lint:web": "yarn workspace @hotel/web lint"
+    "lint:web": "yarn workspace @hotel/web lint",
+    "test:backend": "yarn workspace @hotel/api test",
+    "test:frontend": "yarn workspace @hotel/web test",
+    "test:ci": "yarn test:backend && yarn test:frontend"
   },
   "devDependencies": {
     "typescript": "^5.4.0"
