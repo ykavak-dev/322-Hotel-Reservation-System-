@@ -19,6 +19,7 @@ import { DashboardPage } from './pages/hotel-admin/DashboardPage';
 import { RoomsPage } from './pages/hotel-admin/RoomsPage';
 import { BookingsPage } from './pages/hotel-admin/BookingsPage';
 import { HotelProfilePage } from './pages/hotel-admin/HotelProfilePage';
+import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
 import Home from './pages/Home';
 
 function App() {
@@ -74,7 +75,7 @@ function App() {
             </ProtectedRoute>
           }
         >
-          <Route path="/admin" element={<div>Admin Dashboard</div>} />
+          <Route path="/admin" element={<AdminDashboardPage />} />
           <Route path="/admin/users" element={<div>Users</div>} />
           <Route path="/admin/hotels" element={<div>Hotels</div>} />
           <Route path="/admin/reviews" element={<div>Reviews</div>} />
