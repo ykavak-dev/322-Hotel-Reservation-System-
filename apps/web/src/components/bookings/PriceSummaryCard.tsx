@@ -1,8 +1,6 @@
-import { useFormContext } from 'react-hook-form';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { LoadingSpinner } from '@/components/auth/LoadingSpinner';
-import type { CheckoutFormData } from '@/lib/validations/bookingSchemas';
 import { cn } from '@/lib/utils';
 
 interface PriceSummaryCardProps {
