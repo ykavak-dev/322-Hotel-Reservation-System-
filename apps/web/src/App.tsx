@@ -21,6 +21,8 @@ function App() {
         {/* Public routes with MainLayout */}
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
+          <Route path="/hotels" element={<SearchPage />} />
+          <Route path="/hotels/:id" element={<HotelDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/forgot-password" element={<ForgotPasswordPage />} />
