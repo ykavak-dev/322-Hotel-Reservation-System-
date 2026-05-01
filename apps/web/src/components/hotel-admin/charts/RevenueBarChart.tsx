@@ -18,7 +18,7 @@ export const RevenueBarChart: React.FC<RevenueBarChartProps> = ({ data }) => {
           tickFormatter={(val) => `$${val >= 1000 ? `${(val / 1000).toFixed(0)}k` : val}`}
         />
         <Tooltip
-          formatter={(value: number) => [`$${value.toLocaleString()}`, 'Revenue']}
+          formatter={(value) => [`$${Number(value).toLocaleString()}`, 'Revenue']}
           contentStyle={{ borderRadius: 8, border: '1px solid hsl(var(--border))' }}
         />
         <Bar dataKey="revenue" radius={[4, 4, 0, 0]}>

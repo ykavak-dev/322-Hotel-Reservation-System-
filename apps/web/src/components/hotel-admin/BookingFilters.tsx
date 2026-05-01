@@ -4,11 +4,11 @@ import { Input } from '../../components/ui/input';
 import { Button } from '../../components/ui/button';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '../../components/ui/select';
 import { Label } from '../../components/ui/label';
-import type { BookingFilters } from '../../types/admin';
+import type { BookingFilters as BookingFiltersType } from '../../types/admin';
 
 interface BookingFiltersProps {
-  filters: BookingFilters;
-  onChange: (filters: BookingFilters) => void;
+  filters: BookingFiltersType;
+  onChange: (filters: BookingFiltersType) => void;
   onExportCSV: () => void;
   hasSelectedRows: boolean;
   onBulkConfirm: () => void;

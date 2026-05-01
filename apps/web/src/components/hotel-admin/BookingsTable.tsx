@@ -8,8 +8,8 @@ import { Checkbox } from '../../components/ui/checkbox';
 import { cn } from '../../lib/utils';
 import type { AdminBooking } from '../../types/admin';
 import { toast } from 'sonner';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { confirmBooking, checkInBooking, checkOutBooking, cancelBookingAdmin } from '../../services/api';
+import { useQueryClient } from '@tanstack/react-query';
+import { confirmBooking, checkInBooking, cancelBookingAdmin } from '../../services/api';
 
 interface BookingsTableProps {
   bookings: AdminBooking[];

@@ -12,7 +12,7 @@ import { toast } from 'sonner';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createRoom, updateRoom } from '../../services/api';
 import type { RoomManagementItem, CreateRoomData } from '../../types/admin';
-import type { RoomType } from '@hotel/shared';
+import { RoomType } from '@hotel/shared';
 
 const AMENITIES_OPTIONS = [
   'WiFi', 'Pool', 'Parking', 'Air Conditioning', 'TV', 'Mini Bar',
@@ -20,7 +20,7 @@ const AMENITIES_OPTIONS = [
   'Gym', 'Spa', 'Pet Friendly',
 ];
 
-const ROOM_TYPES: RoomType[] = ['SINGLE', 'DOUBLE', 'SUITE', 'DELUXE', 'FAMILY'];
+const ROOM_TYPES: RoomType[] = [RoomType.SINGLE, RoomType.DOUBLE, RoomType.SUITE, RoomType.DELUXE, RoomType.FAMILY];
 
 interface AddRoomSheetProps {
   open: boolean;
@@ -41,7 +41,7 @@ export const AddRoomSheet: React.FC<AddRoomSheetProps> = ({
   const queryClient = useQueryClient();
 
   const [form, setForm] = useState<CreateRoomData>({
-    type: 'SINGLE',
+    type: RoomType.SINGLE,
     description: '',
     pricePerNight: 0,
     capacity: 1,
@@ -66,13 +66,13 @@ export const AddRoomSheet: React.FC<AddRoomSheetProps> = ({
         totalQuantity: room.totalQuantity,
       });
     } else {
-      setForm({ type: 'SINGLE', description: '', pricePerNight: 0, capacity: 1, bedType: '', roomSize: undefined, amenities: [], images: [], totalQuantity: 1 });
+      setForm({ type: RoomType.SINGLE, description: '', pricePerNight: 0, capacity: 1, bedType: '', roomSize: undefined, amenities: [], images: [], totalQuantity: 1 });
     }
   }, [room, open]);
 
   const mutation = useMutation({
     mutationFn: (data: CreateRoomData) =>
-      isEdit ? updateRoom(hotelId, room.id, data) : createRoom(hotelId, data),
+      isEdit && room ? updateRoom(hotelId, room.id, data) : createRoom(hotelId, data),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['hotel-rooms', hotelId] });
       toast.success(isEdit ? 'Room updated successfully' : 'Room created successfully');
@@ -87,9 +87,9 @@ export const AddRoomSheet: React.FC<AddRoomSheetProps> = ({
   const toggleAmenity = (amenity: string) => {
     setForm((prev) => ({
       ...prev,
-      amenities: prev.amenities.includes(amenity)
-        ? prev.amenities.filter((a) => a !== amenity)
-        : [...prev.amenities, amenity],
+      amenities: (prev.amenities ?? []).includes(amenity)
+        ? (prev.amenities ?? []).filter((a) => a !== amenity)
+        : [...(prev.amenities ?? []), amenity],
     }));
   };
 
@@ -153,7 +153,7 @@ export const AddRoomSheet: React.FC<AddRoomSheetProps> = ({
                 <div key={amenity} className="flex items-center gap-2">
                   <Checkbox
                     id={`amenity-${amenity}`}
-                    checked={form.amenities.includes(amenity)}
+                    checked={(form.amenities ?? []).includes(amenity)}
                     onCheckedChange={() => toggleAmenity(amenity)}
                   />
                   <Label htmlFor={`amenity-${amenity}`} className="text-sm font-normal cursor-pointer">{amenity}</Label>

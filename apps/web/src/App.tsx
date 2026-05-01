@@ -15,6 +15,10 @@ import { CheckoutPage } from './pages/bookings/CheckoutPage';
 import { PaymentPage } from './pages/bookings/PaymentPage';
 import { MyBookingsPage } from './pages/bookings/MyBookingsPage';
 import { UnauthorizedPage } from './pages/error/UnauthorizedPage';
+import { DashboardPage } from './pages/hotel-admin/DashboardPage';
+import { RoomsPage } from './pages/hotel-admin/RoomsPage';
+import { BookingsPage } from './pages/hotel-admin/BookingsPage';
+import { HotelProfilePage } from './pages/hotel-admin/HotelProfilePage';
 import Home from './pages/Home';
 
 function App() {
@@ -51,15 +55,15 @@ function App() {
         {/* Hotel Admin routes */}
         <Route
           element={
-            <ProtectedRoute allowedRoles={['hotel_owner', 'HOTEL_ADMIN', 'SYSTEM_ADMIN']}>
+            <ProtectedRoute allowedRoles={['CUSTOMER', 'HOTEL_ADMIN', 'SYSTEM_ADMIN']}>
               <HotelAdminLayout />
             </ProtectedRoute>
           }
         >
-          <Route path="/hotel-admin/dashboard" element={<div>Hotel Dashboard</div>} />
-          <Route path="/hotel-admin/rooms" element={<div>Rooms</div>} />
-          <Route path="/hotel-admin/bookings" element={<div>Bookings</div>} />
-          <Route path="/hotel-admin/hotel-profile" element={<div>Hotel Profile</div>} />
+          <Route path="/hotel-admin/dashboard" element={<DashboardPage />} />
+          <Route path="/hotel-admin/rooms" element={<RoomsPage />} />
+          <Route path="/hotel-admin/bookings" element={<BookingsPage />} />
+          <Route path="/hotel-admin/hotel-profile" element={<HotelProfilePage />} />
         </Route>
 
         {/* Global Admin routes */}

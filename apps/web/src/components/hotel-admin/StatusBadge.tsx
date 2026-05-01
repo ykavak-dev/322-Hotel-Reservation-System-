@@ -1,6 +1,5 @@
 // apps/web/src/components/hotel-admin/StatusBadge.tsx
 import { cn } from '../../lib/utils';
-import type { BookingStatus } from '@hotel/shared';
 
 const statusConfig: Record<string, { label: string; className: string }> = {
   PENDING: { label: 'Pending', className: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400' },
