@@ -26,33 +26,9 @@ const recentBookings = [
 
 export function DashboardPage() {
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="flex">
-        <aside className="w-64 bg-[#1E3A5F] min-h-screen">
-          <div className="p-6">
-            <h1 className="text-xl font-bold text-white">HotelHub Admin</h1>
-          </div>
-          <nav className="mt-6">
-            {[
-              { label: 'Dashboard', active: true },
-              { label: 'Rooms', active: false },
-              { label: 'Bookings', active: false },
-              { label: 'Hotel Profile', active: false },
-            ].map((item) => (
-              <a
-                key={item.label}
-                href={item.label === 'Dashboard' ? '/hotel-admin/dashboard' : `#${item.label.toLowerCase()}`}
-                className={`block px-6 py-3 text-sm ${item.active ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5'}`}
-              >
-                {item.label}
-              </a>
-            ))}
-          </nav>
-        </aside>
-
-        <main className="flex-1 p-8">
-          <div className="mb-8">
-            <h1 className="text-2xl font-bold text-[#1E3A5F]">Dashboard</h1>
+    <div className="min-h-screen bg-gray-50 p-8">
+      <div className="mb-8">
+        <h1 className="text-2xl font-bold text-[#1E3A5F]">Dashboard</h1>
             <p className="text-gray-500">Welcome back! Here's your hotel overview.</p>
           </div>
 
@@ -147,8 +123,6 @@ export function DashboardPage() {
               </table>
             </Card>
           </div>
-        </main>
-      </div>
     </div>
   );
 }
