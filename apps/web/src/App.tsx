@@ -8,6 +8,8 @@ import { LoginPage } from './pages/auth/LoginPage';
 import { RegisterPage } from './pages/auth/RegisterPage';
 import { ForgotPasswordPage } from './pages/auth/ForgotPasswordPage';
 import { ProfilePage } from './pages/user/ProfilePage';
+import { SearchPage } from './pages/hotels/SearchPage';
+import { HotelDetailPage } from './pages/hotels/HotelDetailPage';
 import { UnauthorizedPage } from './pages/error/UnauthorizedPage';
 import Home from './pages/Home';
 
