@@ -96,6 +96,11 @@ export async function cancelBooking(bookingId: string): Promise<CancellationResu
   return data;
 }
 
+export async function getUserBookings(): Promise<BookingDetail[]> {
+  const { data } = await api.get<BookingDetail[]>('/bookings');
+  return data;
+}
+
 export async function processPayment(data: ProcessPaymentData): Promise<PaymentResult> {
   const { data: result } = await api.post<PaymentResult>('/payments/process', data);
   return result;
