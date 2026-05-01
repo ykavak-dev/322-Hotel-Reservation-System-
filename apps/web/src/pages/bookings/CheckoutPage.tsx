@@ -1,161 +1,142 @@
-import { useEffect, useMemo } from 'react';
-import { useSearchParams, useNavigate } from 'react-router-dom';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import { FormProvider } from 'react-hook-form';
+import { useState } from 'react';
+import { Calendar, Users, ArrowLeft } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Link } from 'react-router-dom';
 
-import { checkoutSchema } from '@/lib/validations/bookingSchemas';
-import { createBooking } from '@/services/api';
-import { queryClient } from '@/lib/api/queryClient';
-import type { CreateBookingData } from '@/types/booking';
-
-import { Breadcrumb } from '@/components/bookings/Breadcrumb';
-import { BookingSummaryCard } from '@/components/bookings/BookingSummaryCard';
-import { GuestDetailsForm } from '@/components/bookings/GuestDetailsForm';
-import { PriceSummaryCard } from '@/components/bookings/PriceSummaryCard';
-
-export const CheckoutPage: React.FC = () => {
-  const [searchParams] = useSearchParams();
-  const navigate = useNavigate();
-
-  // Parse URL params
-  const roomId = searchParams.get('roomId') ?? '';
-  const checkIn = searchParams.get('checkIn') ?? '';
-  const checkOut = searchParams.get('checkOut') ?? '';
-  const guests = Number(searchParams.get('guests') ?? '1');
-  const price = Number(searchParams.get('price') ?? '0');
-  const hotelName = searchParams.get('hotelName') ?? '';
-  const roomType = searchParams.get('roomType') ?? '';
-  const hotelImage = searchParams.get('hotelImage') ?? '';
-
-  // Calculate nights
-  const nights = useMemo(() => {
-    if (!checkIn || !checkOut) return 0;
-    const checkInDate = new Date(checkIn);
-    const checkOutDate = new Date(checkOut);
-    const diffTime = checkOutDate.getTime() - checkInDate.getTime();
-    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  }, [checkIn, checkOut]);
-
-  // Form setup
-  const methods = useForm({
-    resolver: zodResolver(checkoutSchema),
-    defaultValues: {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      specialRequests: '',
-      isBookingForSomeoneElse: false,
-      guestFirstName: '',
-      guestLastName: '',
-      guestEmail: '',
-      guestPhone: '',
-    },
+export function CheckoutPage() {
+  const [guestInfo, setGuestInfo] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phone: '',
   });
-
-  const { handleSubmit } = methods;
-
-  // Create booking mutation
-  const mutation = useMutation({
-    mutationFn: async (data: CreateBookingData) => {
-      return createBooking(data);
-    },
-    onSuccess: (response) => {
-      queryClient.invalidateQueries({ queryKey: ['bookings'] });
-      toast.success('Booking created successfully!');
-      navigate(`/payment/${response.id}`);
-    },
-    onError: (error: any) => {
-      toast.error(error.response?.data?.message || 'Failed to create booking. Please try again.');
-    },
-  });
-
-  const onSubmit = handleSubmit((data) => {
-    if (!roomId || !checkIn || !checkOut) {
-      toast.error('Missing booking information. Please go back and try again.');
-      return;
-    }
-
-    mutation.mutate({
-      roomId,
-      checkIn,
-      checkOut,
-      numberOfGuests: guests,
-      specialRequests: data.specialRequests,
-    });
-  });
-
-  // Validate required params on mount
-  useEffect(() => {
-    if (!roomId || !checkIn || !checkOut) {
-      toast.error('Missing booking information. Please go back and try again.');
-      navigate('/hotels');
-    }
-  }, [roomId, checkIn, checkOut, navigate]);
 
   return (
-    <FormProvider {...methods}>
-      <div className="min-h-screen bg-background">
-        <div className="container mx-auto px-4 py-6">
-          {/* Breadcrumb */}
-          <div className="mb-6">
-            <Breadcrumb
-              items={[
-                { label: hotelName, href: `/hotels` },
-                { label: roomType },
-                { label: 'Booking' },
-              ]}
-            />
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <header className="bg-white shadow-sm py-4 px-8">
+        <div className="max-w-7xl mx-auto flex items-center gap-4">
+          <Link to="/hotels" className="p-2 hover:bg-gray-100 rounded-lg">
+            <ArrowLeft className="w-5 h-5" />
+          </Link>
+          <h1 className="text-2xl font-bold text-[#1E3A5F]">Complete Your Booking</h1>
+        </div>
+      </header>
 
-          <div className="grid gap-6 lg:grid-cols-[1fr_400px]">
-            {/* Left column - 60% */}
-            <div className="space-y-6">
-              <BookingSummaryCard
-                hotelImage={hotelImage}
-                hotelName={hotelName}
-                roomType={roomType}
-                checkIn={checkIn}
-                checkOut={checkOut}
-                nights={nights}
-                pricePerNight={price}
-              />
-
-              <GuestDetailsForm />
+      <div className="max-w-7xl mx-auto py-8 px-8">
+        <div className="grid grid-cols-3 gap-8">
+          <div className="col-span-2 space-y-6">
+            <div className="bg-white rounded-xl p-6">
+              <h2 className="text-xl font-semibold text-[#1E3A5F] mb-4">Guest Information</h2>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">First Name</label>
+                  <Input
+                    value={guestInfo.firstName}
+                    onChange={(e) => setGuestInfo({ ...guestInfo, firstName: e.target.value })}
+                    placeholder="John"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">Last Name</label>
+                  <Input
+                    value={guestInfo.lastName}
+                    onChange={(e) => setGuestInfo({ ...guestInfo, lastName: e.target.value })}
+                    placeholder="Doe"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">Email</label>
+                  <Input
+                    type="email"
+                    value={guestInfo.email}
+                    onChange={(e) => setGuestInfo({ ...guestInfo, email: e.target.value })}
+                    placeholder="john@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-gray-700 mb-1 block">Phone</label>
+                  <Input
+                    value={guestInfo.phone}
+                    onChange={(e) => setGuestInfo({ ...guestInfo, phone: e.target.value })}
+                    placeholder="+1 234 567 8900"
+                  />
+                </div>
+              </div>
             </div>
 
-            {/* Right column - 40%, sticky */}
-            <div className="hidden lg:block">
-              <div className="sticky top-24">
-                <PriceSummaryCard
-                  pricePerNight={price}
-                  nights={nights}
-                  isSubmitting={mutation.isPending}
-                  onConfirm={onSubmit}
-                />
+            <div className="bg-white rounded-xl p-6">
+              <h2 className="text-xl font-semibold text-[#1E3A5F] mb-4">Booking Details</h2>
+              <div className="space-y-4">
+                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                  <Calendar className="w-5 h-5 text-[#3B82F6]" />
+                  <div>
+                    <p className="font-medium">Check-in</p>
+                    <p className="text-gray-500">May 15, 2026</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                  <Calendar className="w-5 h-5 text-[#3B82F6]" />
+                  <div>
+                    <p className="font-medium">Check-out</p>
+                    <p className="text-gray-500">May 18, 2026</p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-4 p-4 bg-gray-50 rounded-lg">
+                  <Users className="w-5 h-5 text-[#3B82F6]" />
+                  <div>
+                    <p className="font-medium">Guests</p>
+                    <p className="text-gray-500">2 adults</p>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          {/* Mobile price summary - bottom sticky */}
-          <div className="fixed bottom-0 left-0 right-0 border-t bg-background p-4 lg:hidden">
-            <div className="mx-auto max-w-md">
-              <PriceSummaryCard
-                pricePerNight={price}
-                nights={nights}
-                isSubmitting={mutation.isPending}
-                onConfirm={onSubmit}
-              />
+          <div className="space-y-6">
+            <div className="bg-white rounded-xl p-6 shadow-sm">
+              <h2 className="text-xl font-semibold text-[#1E3A5F] mb-4">Booking Summary</h2>
+
+              <div className="flex gap-4 mb-4">
+                <img
+                  src="https://images.unsplash.com/photo-1582719508461-905c673771fd?w=200"
+                  alt="Hotel"
+                  className="w-24 h-24 object-cover rounded-lg"
+                />
+                <div>
+                  <h3 className="font-semibold text-[#1E3A5F]">Grand Luxury Resort</h3>
+                  <p className="text-sm text-gray-500">Deluxe Ocean View</p>
+                  <div className="flex items-center gap-1 mt-1">
+                    <span className="text-[#F59E0B]">★</span>
+                    <span>4.8</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="border-t border-gray-200 pt-4 space-y-2">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">$450 x 3 nights</span>
+                  <span>$1,350</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-500">Service fee</span>
+                  <span>$45</span>
+                </div>
+                <div className="flex justify-between font-bold text-lg pt-2 border-t border-gray-200">
+                  <span>Total</span>
+                  <span className="text-[#3B82F6]">$1,395</span>
+                </div>
+              </div>
+
+              <Link to="/payment/1">
+                <Button className="w-full mt-6 bg-[#3B82F6] hover:bg-[#2563EB] text-white">
+                  Proceed to Payment
+                </Button>
+              </Link>
             </div>
           </div>
-
-          {/* Spacer for mobile bottom bar */}
-          <div className="h-24 lg:hidden" />
         </div>
       </div>
-    </FormProvider>
+    </div>
   );
-};
+}
