@@ -1,5 +1,7 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Search, CheckCircle, XCircle, Eye, Filter } from 'lucide-react';
+import { toast } from 'sonnet';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -28,19 +30,19 @@ export function AdminDashboardPage() {
           </div>
           <nav className="mt-6">
             {[
-              { label: 'Dashboard', active: true },
-              { label: 'Users', active: false },
-              { label: 'Hotels', active: false },
-              { label: 'Bookings', active: false },
-              { label: 'Reviews', active: false },
+              { label: 'Dashboard', active: true, to: '/admin' },
+              { label: 'Users', active: false, to: '/admin/users' },
+              { label: 'Hotels', active: false, to: '/admin/hotels' },
+              { label: 'Bookings', active: false, to: '/admin/bookings' },
+              { label: 'Reviews', active: false, to: '/admin/reviews' },
             ].map((item) => (
-              <a
+              <Link
                 key={item.label}
-                href={item.label === 'Dashboard' ? '/admin' : `#${item.label.toLowerCase()}`}
+                to={item.to}
                 className={`block px-6 py-3 text-sm ${item.active ? 'bg-white/10 text-white' : 'text-white/70 hover:bg-white/5'}`}
               >
                 {item.label}
-              </a>
+              </Link>
             ))}
           </nav>
         </aside>
@@ -111,11 +113,11 @@ export function AdminDashboardPage() {
                         </button>
                         {hotel.status === 'pending' && (
                           <>
-                            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white gap-1">
+                            <Button size="sm" className="bg-green-500 hover:bg-green-600 text-white gap-1" onClick={() => toast.success(`Approved: ${hotel.name}`)}>
                               <CheckCircle className="w-4 h-4" />
                               Approve
                             </Button>
-                            <Button size="sm" variant="outline" className="text-red-500 border-red-200 hover:bg-red-50 gap-1">
+                            <Button size="sm" variant="outline" className="text-red-500 border-red-200 hover:bg-red-50 gap-1" onClick={() => toast.error(`Rejected: ${hotel.name}`)}>
                               <XCircle className="w-4 h-4" />
                               Reject
                             </Button>
