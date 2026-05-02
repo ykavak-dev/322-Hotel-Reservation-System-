@@ -4,13 +4,14 @@ import type { ProcessPaymentData, PaymentResult } from '../types/hotel';
 import type { AdminDashboardData, BookingFilters, AdminBookingListResponse, AdminBooking, RoomManagementItem, CreateRoomData, UpdateRoomData, HotelProfileData, UpdateHotelData } from '../types/admin';
 import type { SystemDashboardStats, UserListResponse, UserActivity, PendingHotelsResponse, HotelsListResponse, AdminHotelItem, SystemBookingsResponse, ReviewsListResponse, PendingReviewsResponse } from '../types/systemAdmin';
 
+import { RoomType, BookingStatus, PaymentStatus, UserRole } from '@hotel/shared';
 import { mockHotels, mockRooms, mockReviews, mockBookings, mockAdminDashboard, mockSystemDashboard, mockHotelRooms } from './data';
 
 const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
 
 // ============ HOTEL SEARCH & DETAILS ============
 
-export async function mockSearchHotels(params: Record<string, unknown>): Promise<SearchResponse> {
+export async function mockSearchHotels(_params: Record<string, unknown>): Promise<SearchResponse> {
   await delay(300);
   return {
     hotels: mockHotels,
@@ -60,7 +61,7 @@ export async function mockGetHotelReviews(
   };
 }
 
-export async function mockCanWriteReview(hotelId: string): Promise<{ canReview: boolean; reason?: string }> {
+export async function mockCanWriteReview(_hotelId: string): Promise<{ canReview: boolean; reason?: string }> {
   await delay(200);
   // For mock purposes, assume user can review
   return { canReview: true };
@@ -128,7 +129,7 @@ export async function mockGetAdminDashboard(): Promise<AdminDashboardData> {
   return mockAdminDashboard;
 }
 
-export async function mockGetHotelAdminBookings(filters: BookingFilters = {}): Promise<AdminBookingListResponse> {
+export async function mockGetHotelAdminBookings(_filters: BookingFilters = {}): Promise<AdminBookingListResponse> {
   await delay(300);
   // Convert mockBookings to AdminBooking format
   const adminBookings: AdminBooking[] = mockBookings.map((booking, index) => ({
@@ -234,7 +235,7 @@ export async function mockUpdateRoom(hotelId: string, roomId: string, roomData: 
   return {
     id: roomId,
     hotelId,
-    type: existingRoom?.type || 'SINGLE',
+    type: existingRoom?.type || RoomType.SINGLE,
     description: roomData.description !== undefined ? roomData.description : existingRoom?.description || null,
     pricePerNight: roomData.pricePerNight ?? existingRoom?.pricePerNight ?? 0,
     capacity: roomData.capacity ?? existingRoom?.capacity ?? 1,
@@ -247,7 +248,7 @@ export async function mockUpdateRoom(hotelId: string, roomId: string, roomData: 
   };
 }
 
-export async function mockDeleteRoom(hotelId: string, roomId: string): Promise<void> {
+export async function mockDeleteRoom(_hotelId: string, _roomId: string): Promise<void> {
   await delay(300);
   // Mock implementation - in real scenario this would delete the room
   return Promise.resolve();
@@ -310,7 +311,7 @@ export async function mockGetSystemUsers(params: {
       email: 'sarah.johnson@email.com',
       firstName: 'Sarah',
       lastName: 'Johnson',
-      role: 'CUSTOMER' as const,
+      role: UserRole.CUSTOMER,
       isActive: true,
       createdAt: '2024-01-15T10:00:00Z',
       _count: { bookings: 5 },
@@ -320,7 +321,7 @@ export async function mockGetSystemUsers(params: {
       email: 'michael.chen@email.com',
       firstName: 'Michael',
       lastName: 'Chen',
-      role: 'CUSTOMER' as const,
+      role: UserRole.CUSTOMER,
       isActive: true,
       createdAt: '2024-02-20T14:30:00Z',
       _count: { bookings: 3 },
@@ -330,7 +331,7 @@ export async function mockGetSystemUsers(params: {
       email: 'hotel.owner@email.com',
       firstName: 'Hotel',
       lastName: 'Owner',
-      role: 'HOTEL_ADMIN' as const,
+      role: UserRole.HOTEL_ADMIN,
       isActive: true,
       createdAt: '2024-01-01T09:00:00Z',
       _count: { bookings: 0 },
@@ -340,7 +341,7 @@ export async function mockGetSystemUsers(params: {
       email: 'system.admin@email.com',
       firstName: 'System',
       lastName: 'Admin',
-      role: 'SYSTEM_ADMIN' as const,
+      role: UserRole.SYSTEM_ADMIN,
       isActive: true,
       createdAt: '2023-12-01T08:00:00Z',
       _count: { bookings: 0 },
@@ -368,17 +369,17 @@ export async function mockGetSystemUsers(params: {
   };
 }
 
-export async function mockUpdateUserRole(userId: string, role: string): Promise<void> {
+export async function mockUpdateUserRole(_userId: string, _role: string): Promise<void> {
   await delay(300);
   return Promise.resolve();
 }
 
-export async function mockBanUser(userId: string): Promise<void> {
+export async function mockBanUser(_userId: string): Promise<void> {
   await delay(300);
   return Promise.resolve();
 }
 
-export async function mockGetUserActivity(userId: string): Promise<UserActivity> {
+export async function mockGetUserActivity(_userId: string): Promise<UserActivity> {
   await delay(300);
   return {
     bookings: [
@@ -386,7 +387,7 @@ export async function mockGetUserActivity(userId: string): Promise<UserActivity>
         id: 'booking-001',
         checkIn: '2024-04-15',
         checkOut: '2024-04-20',
-        status: 'completed' as const,
+        status: BookingStatus.COMPLETED,
         totalPrice: 1995,
         hotelName: 'Sunset Beach Resort & Spa',
       },
@@ -505,12 +506,12 @@ export async function mockGetHotelDetail(hotelId: string): Promise<AdminHotelIte
   };
 }
 
-export async function mockApproveHotel(hotelId: string): Promise<void> {
+export async function mockApproveHotel(_hotelId: string): Promise<void> {
   await delay(300);
   return Promise.resolve();
 }
 
-export async function mockRejectHotel(hotelId: string, reason: string): Promise<void> {
+export async function mockRejectHotel(_hotelId: string, _reason: string): Promise<void> {
   await delay(300);
   return Promise.resolve();
 }
@@ -557,7 +558,7 @@ export async function mockGetSystemBookings(params: {
       id: p.id,
       amount: p.amount,
       currency: p.currency,
-      status: 'paid' as const,
+      status: PaymentStatus.PAID,
       paymentMethod: p.paymentMethod,
       paidAt: p.paidAt?.toISOString() || null,
     })),
@@ -571,7 +572,7 @@ export async function mockGetSystemBookings(params: {
   };
 }
 
-export async function mockRefundBooking(bookingId: string): Promise<{ success: boolean; message: string }> {
+export async function mockRefundBooking(_bookingId: string): Promise<{ success: boolean; message: string }> {
   await delay(400);
   return {
     success: true,
@@ -641,17 +642,17 @@ export async function mockGetAllReviews(params: {
   };
 }
 
-export async function mockApproveReview(reviewId: string): Promise<void> {
+export async function mockApproveReview(_reviewId: string): Promise<void> {
   await delay(300);
   return Promise.resolve();
 }
 
-export async function mockRejectReview(reviewId: string): Promise<void> {
+export async function mockRejectReview(_reviewId: string): Promise<void> {
   await delay(300);
   return Promise.resolve();
 }
 
-export async function mockDeleteReview(reviewId: string): Promise<void> {
+export async function mockDeleteReview(_reviewId: string): Promise<void> {
   await delay(300);
   return Promise.resolve();
 }

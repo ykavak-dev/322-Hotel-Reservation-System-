@@ -16,7 +16,6 @@ const hotels = [
 
 export function AdminDashboardPage() {
   const [activeTab, setActiveTab] = useState<TabType>('pending');
-  const [selectedHotel, setSelectedHotel] = useState<string | null>(null);
 
   const filteredHotels = hotels.filter(h => h.status === activeTab);
 
