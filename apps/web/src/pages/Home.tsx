@@ -4,7 +4,7 @@ import type { HotelSearchResult } from '@/types/hotel';
 
 const featuredHotels: HotelSearchResult[] = [
   {
-    id: '1',
+    id: 'hotel-001',
     name: 'Grand Luxury Resort',
     description: 'A stunning luxury resort in the heart of the Maldives',
     address: 'Maldives',
@@ -19,7 +19,7 @@ const featuredHotels: HotelSearchResult[] = [
     availableRoomTypes: ['deluxe', 'suite'],
   },
   {
-    id: '2',
+    id: 'hotel-002',
     name: 'Seaside Paradise Hotel',
     description: 'Beautiful beachfront hotel in Bali',
     address: 'Bali, Indonesia',
@@ -34,7 +34,7 @@ const featuredHotels: HotelSearchResult[] = [
     availableRoomTypes: ['standard', 'deluxe'],
   },
   {
-    id: '3',
+    id: 'hotel-003',
     name: 'Mountain View Lodge',
     description: 'Cozy mountain lodge in the Swiss Alps',
     address: 'Swiss Alps',
