@@ -60,17 +60,6 @@ const cityImages: Record<string, string> = {
 const Home = () => {
   return (
     <div className="min-h-screen bg-gray-50">
-      <header className="bg-white shadow-sm py-4 px-8">
-        <div className="max-w-7xl mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold text-[#1E3A5F]">HotelHub</h1>
-          <nav className="flex gap-6">
-            <a href="/hotels" className="text-gray-600 hover:text-[#3B82F6]">Hotels</a>
-            <a href="/my-bookings" className="text-gray-600 hover:text-[#3B82F6]">My Bookings</a>
-            <a href="/login" className="text-gray-600 hover:text-[#3B82F6]">Login</a>
-          </nav>
-        </div>
-      </header>
-
       <main className="max-w-7xl mx-auto py-12 px-8 space-y-12">
         <HeroSection />
 
