@@ -1,0 +1,8 @@
+{
+  "projects": [
+    {
+      "name": "hotel-reservation-web",
+      "root": "apps/web"
+    }
+  ]
+}
