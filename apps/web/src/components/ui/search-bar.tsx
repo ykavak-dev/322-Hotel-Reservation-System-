@@ -7,32 +7,32 @@ interface SearchBarProps {
 
 export function SearchBar({ className }: SearchBarProps) {
   return (
-    <div className={`bg-white rounded-2xl shadow-xl p-6 flex gap-4 ${className}`}>
-      <div className="flex-1 flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3">
-        <MapPin className="w-5 h-5 text-gray-400" />
+    <div className={`bg-white rounded-2xl shadow-xl p-3 flex items-center gap-3 ${className}`}>
+      <div className="flex-1 h-12 flex items-center gap-3 border border-gray-200 rounded-lg px-4">
+        <MapPin className="w-5 h-5 text-gray-400 shrink-0" />
         <input
           type="text"
           placeholder="Where are you going?"
-          className="flex-1 outline-none text-sm"
+          className="w-full outline-none text-sm"
         />
       </div>
-      <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3">
-        <Calendar className="w-5 h-5 text-gray-400" />
+      <div className="h-12 flex items-center gap-3 border border-gray-200 rounded-lg px-4">
+        <Calendar className="w-5 h-5 text-gray-400 shrink-0" />
         <input
           type="text"
           placeholder="Check in - Check out"
-          className="flex-1 outline-none text-sm"
+          className="outline-none text-sm"
         />
       </div>
-      <div className="flex items-center gap-3 border border-gray-200 rounded-lg px-4 py-3">
-        <Users className="w-5 h-5 text-gray-400" />
+      <div className="h-12 flex items-center gap-3 border border-gray-200 rounded-lg px-4">
+        <Users className="w-5 h-5 text-gray-400 shrink-0" />
         <input
           type="text"
           placeholder="2 guests, 1 room"
-          className="flex-1 outline-none text-sm"
+          className="outline-none text-sm"
         />
       </div>
-      <Button className="bg-[#3B82F6] hover:bg-[#2563EB] text-white px-8">
+      <Button className="h-12 bg-[#3B82F6] hover:bg-[#2563EB] text-white px-6 rounded-lg">
         Search
       </Button>
     </div>
