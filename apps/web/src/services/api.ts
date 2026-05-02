@@ -171,4 +171,124 @@ export async function updateHotelProfile(hotelId: string, hotelData: UpdateHotel
   return data;
 }
 
+// ============ SYSTEM ADMIN ============
+import type {
+  SystemDashboardStats,
+  UserListResponse,
+  UserActivity,
+  PendingHotelsResponse,
+  HotelsListResponse,
+  AdminHotelItem,
+  SystemBookingsResponse,
+  ReviewsListResponse,
+  PendingReviewsResponse,
+} from '../types/systemAdmin';
+
+// Dashboard
+export async function getSystemDashboard(): Promise<SystemDashboardStats> {
+  const { data } = await api.get<SystemDashboardStats>('/admin/dashboard');
+  return data;
+}
+
+// Users
+export async function getSystemUsers(params: {
+  page?: number;
+  limit?: number;
+  role?: string;
+  search?: string;
+}): Promise<UserListResponse> {
+  const { data } = await api.get<UserListResponse>('/admin/users', { params });
+  return data;
+}
+
+export async function updateUserRole(userId: string, role: string): Promise<void> {
+  await api.put(`/admin/users/${userId}/role`, { role });
+}
+
+export async function banUser(userId: string): Promise<void> {
+  await api.put(`/admin/users/${userId}/ban`);
+}
+
+export async function getUserActivity(userId: string): Promise<UserActivity> {
+  const { data } = await api.get<UserActivity>(`/admin/users/${userId}/activity`);
+  return data;
+}
+
+// Hotels
+export async function getPendingHotels(): Promise<PendingHotelsResponse> {
+  const { data } = await api.get<PendingHotelsResponse>('/admin/hotels/pending');
+  return data;
+}
+
+export async function getAllHotels(params: {
+  page?: number;
+  limit?: number;
+  verificationStatus?: string;
+  search?: string;
+}): Promise<HotelsListResponse> {
+  const { data } = await api.get<HotelsListResponse>('/admin/hotels', { params });
+  return data;
+}
+
+export async function getHotelDetail(hotelId: string): Promise<AdminHotelItem> {
+  const { data } = await api.get<AdminHotelItem>(`/admin/hotels/${hotelId}`);
+  return data;
+}
+
+export async function approveHotel(hotelId: string): Promise<void> {
+  await api.put(`/admin/hotels/${hotelId}/approve`);
+}
+
+export async function rejectHotel(hotelId: string, reason: string): Promise<void> {
+  await api.put(`/admin/hotels/${hotelId}/reject`, { reason });
+}
+
+// Bookings
+export async function getSystemBookings(params: {
+  page?: number;
+  limit?: number;
+  hotelId?: string;
+  status?: string;
+  dateFrom?: string;
+  dateTo?: string;
+  priceMin?: number;
+  priceMax?: number;
+  search?: string;
+}): Promise<SystemBookingsResponse> {
+  const { data } = await api.get<SystemBookingsResponse>('/admin/bookings', { params });
+  return data;
+}
+
+export async function refundBooking(bookingId: string): Promise<{ success: boolean; message: string }> {
+  const { data } = await api.put<{ success: boolean; message: string }>(`/admin/bookings/${bookingId}/refund`);
+  return data;
+}
+
+// Reviews
+export async function getPendingReviews(): Promise<PendingReviewsResponse> {
+  const { data } = await api.get<PendingReviewsResponse>('/admin/reviews/pending');
+  return data;
+}
+
+export async function getAllReviews(params: {
+  page?: number;
+  limit?: number;
+  status?: string;
+}): Promise<ReviewsListResponse> {
+  const { data } = await api.get<ReviewsListResponse>('/admin/reviews', { params });
+  return data;
+}
+
+export async function approveReview(reviewId: string): Promise<void> {
+  await api.put(`/admin/reviews/${reviewId}/approve`);
+}
+
+export async function rejectReview(reviewId: string): Promise<void> {
+  await api.put(`/admin/reviews/${reviewId}/reject`);
+}
+
+export async function deleteReview(reviewId: string): Promise<void> {
+  await api.delete(`/admin/reviews/${reviewId}`);
+}
+
 export { queryClient } from '../lib/api/queryClient';

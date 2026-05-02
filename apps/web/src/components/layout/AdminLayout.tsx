@@ -1,5 +1,5 @@
 import { Outlet, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, Hotel, Star } from 'lucide-react';
+import { LayoutDashboard, Users, Hotel, Star, CalendarCheck } from 'lucide-react';
 import { Button } from '../ui/button';
 import { Sidebar } from './Sidebar';
 import { Moon, Sun } from 'lucide-react';
@@ -15,12 +15,14 @@ export const AdminLayout: React.FC = () => {
     { label: 'Dashboard', href: '/admin', icon: <LayoutDashboard className="h-4 w-4" /> },
     { label: 'Users', href: '/admin/users', icon: <Users className="h-4 w-4" /> },
     { label: 'Hotels', href: '/admin/hotels', icon: <Hotel className="h-4 w-4" /> },
+    { label: 'Bookings', href: '/admin/bookings', icon: <CalendarCheck className="h-4 w-4" /> },
     { label: 'Reviews', href: '/admin/reviews', icon: <Star className="h-4 w-4" /> },
   ];
 
   const getPageTitle = () => {
     if (location.pathname.includes('/users')) return 'User Management';
     if (location.pathname.includes('/hotels')) return 'Hotel Management';
+    if (location.pathname.includes('/bookings')) return 'Bookings Management';
     if (location.pathname.includes('/reviews')) return 'Review Management';
     return 'Admin Dashboard';
   };

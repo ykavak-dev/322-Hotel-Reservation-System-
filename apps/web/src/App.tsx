@@ -19,6 +19,11 @@ import { DashboardPage } from './pages/hotel-admin/DashboardPage';
 import { RoomsPage } from './pages/hotel-admin/RoomsPage';
 import { BookingsPage } from './pages/hotel-admin/BookingsPage';
 import { HotelProfilePage } from './pages/hotel-admin/HotelProfilePage';
+import { AdminDashboardPage } from './pages/admin/AdminDashboardPage';
+import { UsersPage } from './pages/admin/UsersPage';
+import { HotelsPage } from './pages/admin/HotelsPage';
+import { SystemBookingsPage } from './pages/admin/SystemBookingsPage';
+import { ReviewsPage } from './pages/admin/ReviewsPage';
 import Home from './pages/Home';
 
 function App() {
@@ -69,15 +74,16 @@ function App() {
         {/* Global Admin routes */}
         <Route
           element={
-            <ProtectedRoute allowedRoles={['admin']}>
+            <ProtectedRoute allowedRoles={['SYSTEM_ADMIN']}>
               <AdminLayout />
             </ProtectedRoute>
           }
         >
-          <Route path="/admin" element={<div>Admin Dashboard</div>} />
-          <Route path="/admin/users" element={<div>Users</div>} />
-          <Route path="/admin/hotels" element={<div>Hotels</div>} />
-          <Route path="/admin/reviews" element={<div>Reviews</div>} />
+          <Route path="/admin" element={<AdminDashboardPage />} />
+          <Route path="/admin/users" element={<UsersPage />} />
+          <Route path="/admin/hotels" element={<HotelsPage />} />
+          <Route path="/admin/bookings" element={<SystemBookingsPage />} />
+          <Route path="/admin/reviews" element={<ReviewsPage />} />
         </Route>
 
         {/* Catch all */}
