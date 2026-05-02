@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { Button } from '@/components/ui/button';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Separator } from '@/components/ui/separator';
-import { api } from '@/services/api';
+import { getHotelProfile, getHotelReviews, canWriteReview } from '@/services/api';
 import { AmenityIcon, getAmenityLabel } from '@/components/hotels/AmenityIcon';
 import { ImageGallery } from '@/components/hotels/ImageGallery';
 import { RoomTable } from '@/components/hotels/RoomTable';
@@ -51,8 +51,24 @@ export function HotelDetailPage() {
   const { data: hotel, isLoading: hotelLoading } = useQuery<HotelDetail>({
     queryKey: ['hotel', id],
     queryFn: async () => {
-      const { data } = await api.get<{ data: HotelDetail }>(`/hotels/${id}`);
-      return data.data;
+      const profile = await getHotelProfile(id!);
+      const reviews = await getHotelReviews(id!);
+      const avgRating = reviews.total > 0
+        ? reviews.reviews.reduce((sum, r) => sum + r.rating, 0) / reviews.total
+        : null;
+      return {
+        id: profile.id,
+        name: profile.name,
+        description: profile.description,
+        address: profile.address,
+        city: profile.city,
+        country: profile.country,
+        starRating: profile.starRating,
+        amenities: profile.amenities,
+        images: profile.images,
+        averageRating: avgRating,
+        createdAt: '',
+      } as HotelDetail;
     },
     enabled: !!id,
   });
@@ -61,10 +77,8 @@ export function HotelDetailPage() {
   const { data: reviewsData } = useQuery({
     queryKey: ['hotel-reviews', id],
     queryFn: async () => {
-      const { data } = await api.get<{ data: { reviews: Array<{ rating: number }>; total: number } }>(
-        `/reviews/hotel/${id}`
-      );
-      return data.data;
+      const data = await getHotelReviews(id!);
+      return { reviews: data.reviews, total: data.total };
     },
     enabled: !!id,
   });
@@ -73,10 +87,8 @@ export function HotelDetailPage() {
   const { data: canReviewData } = useQuery({
     queryKey: ['can-review', id],
     queryFn: async () => {
-      const { data } = await api.get<{ data: { canReview: boolean } }>('/reviews/can-review', {
-        params: { hotelId: id },
-      });
-      return data.data;
+      const data = await canWriteReview(id!);
+      return data;
     },
     enabled: !!id,
   });
