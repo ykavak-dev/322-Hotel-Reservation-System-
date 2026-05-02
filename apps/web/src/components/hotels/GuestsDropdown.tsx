@@ -20,7 +20,7 @@ export function GuestsDropdown({ adults, children, rooms, onChange }: GuestsDrop
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
-        <Button variant="outline" className="w-full justify-start font-normal">
+        <Button variant="ghost" className="h-12 px-4 justify-start font-normal w-full">
           {formatLabel()}
         </Button>
       </PopoverTrigger>
