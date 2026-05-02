@@ -271,6 +271,7 @@ export async function mockGetHotelProfile(hotelId: string): Promise<HotelProfile
     amenities: hotel.amenities,
     images: hotel.images,
     isVerified: true,
+    cheapestRoomPrice: hotel.cheapestRoomPrice,
   };
 }
 

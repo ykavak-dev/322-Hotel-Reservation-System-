@@ -128,6 +128,7 @@ export interface HotelProfileData {
   amenities: string[];
   images: string[];
   isVerified: boolean;
+  cheapestRoomPrice?: number;
 }
 
 export interface UpdateHotelData {

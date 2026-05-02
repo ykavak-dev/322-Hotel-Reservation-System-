@@ -26,6 +26,7 @@ interface HotelDetail {
   amenities: string[];
   images: string[];
   averageRating: number | null;
+  cheapestRoomPrice: number;
   createdAt: string;
 }
 
@@ -67,6 +68,7 @@ export function HotelDetailPage() {
         amenities: profile.amenities,
         images: profile.images,
         averageRating: avgRating,
+        cheapestRoomPrice: profile.cheapestRoomPrice ?? 299,
         createdAt: '',
       } as HotelDetail;
     },
@@ -265,7 +267,7 @@ export function HotelDetailPage() {
       {/* Mobile sticky bar */}
       <StickyBookingBar
         hotelName={hotel.name}
-        cheapestPrice={0}
+        cheapestPrice={hotel.cheapestRoomPrice ?? 299}
         onViewRooms={handleViewRooms}
       />
     </div>
