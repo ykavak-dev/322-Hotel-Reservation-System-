@@ -38,6 +38,15 @@ export const Navbar: React.FC = () => {
             {theme === 'light' ? <Moon className="h-5 w-5" /> : <Sun className="h-5 w-5" />}
           </Button>
 
+          <div className="flex items-center gap-2 border-l pl-4">
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/hotel-admin/dashboard">Hotel Admin</Link>
+            </Button>
+            <Button variant="outline" size="sm" asChild>
+              <Link to="/admin">System Admin</Link>
+            </Button>
+          </div>
+
           {isAuthenticated ? (
             <div className="flex items-center gap-3">
               <Avatar className="h-8 w-8">
@@ -78,6 +87,15 @@ export const Navbar: React.FC = () => {
                 {theme === 'light' ? <Moon className="h-4 w-4 mr-2" /> : <Sun className="h-4 w-4 mr-2" />}
                 {theme === 'light' ? 'Dark Mode' : 'Light Mode'}
               </Button>
+
+              <div className="flex flex-col gap-2 border-t pt-4">
+                <Button variant="outline" asChild onClick={() => setMobileOpen(false)}>
+                  <Link to="/hotel-admin/dashboard">Hotel Admin</Link>
+                </Button>
+                <Button variant="outline" asChild onClick={() => setMobileOpen(false)}>
+                  <Link to="/admin">System Admin</Link>
+                </Button>
+              </div>
 
               {isAuthenticated ? (
                 <>

@@ -1,4 +1,4 @@
-import React, { createContext, useReducer, useCallback } from 'react';
+import React, { createContext, useReducer, useCallback, useEffect } from 'react';
 import type { User } from '../types';
 
 interface AuthState {
@@ -46,9 +46,19 @@ interface AuthContextType {
   login: (token: string, user: User) => void;
   logout: () => void;
   dispatch: React.Dispatch<AuthAction>;
+  mockLoginAsAdmin: () => void;
 }
 
 export const AuthContext = createContext<AuthContextType | null>(null);
+
+const mockAdminUser: User = {
+  id: 'admin-001',
+  email: 'admin@hotelhub.com',
+  firstName: 'Admin',
+  lastName: 'User',
+  role: 'SYSTEM_ADMIN',
+  createdAt: new Date().toISOString(),
+};
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [state, dispatch] = useReducer(authReducer, initialState);
@@ -63,8 +73,23 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     dispatch({ type: 'LOGOUT' });
   }, []);
 
+  const mockLoginAsAdmin = useCallback(() => {
+    const isMockMode = import.meta.env.VITE_USE_MOCK === 'true';
+    if (isMockMode) {
+      login('mock-token', mockAdminUser);
+    }
+  }, [login]);
+
+  // Auto-login as admin in mock mode
+  useEffect(() => {
+    const isMockMode = import.meta.env.VITE_USE_MOCK === 'true';
+    if (isMockMode && !state.isAuthenticated) {
+      login('mock-token', mockAdminUser);
+    }
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ ...state, login, logout, dispatch }}>
+    <AuthContext.Provider value={{ ...state, login, logout, dispatch, mockLoginAsAdmin }}>
       {children}
     </AuthContext.Provider>
   );

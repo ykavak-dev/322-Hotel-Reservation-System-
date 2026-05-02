@@ -37,7 +37,7 @@ export function DateRangePicker({ dateRange, onDateRangeChange, className }: Dat
       <PopoverTrigger asChild>
         <Button
           variant="ghost"
-          className={`h-full px-4 justify-start font-normal border-0 rounded-lg ${!dateRange.from && 'text-muted-foreground'} ${className ?? ''}`}
+          className={`h-full px-4 justify-start font-normal border-0 rounded-lg text-gray-700 ${className ?? ''}`}
         >
           {formatLabel()}
         </Button>
